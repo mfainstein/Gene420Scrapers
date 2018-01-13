@@ -1,0 +1,25 @@
+{
+  "name": "gene420-scrapers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://mfainstein@github.com/mfainstein/Gene420Scrapers.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mfainstein/Gene420Scrapers/issues"
+  },
+  "homepage": "https://github.com/mfainstein/Gene420Scrapers#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.2",
+    "request": "^2.83.0",
+    "typescript": "^2.6.2"
+  }
+}
