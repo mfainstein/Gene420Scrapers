@@ -1,33 +1,26 @@
-import * as express from 'express';
-import * as fs from 'fs';
-import * as cheerio from 'cheerio';
-import * as request from 'request';
-let app = express();
-app.get('/scrape', (req, res)=>{
-    let url = 'https://www.wikileaf.com/strains/';
-    request(url, (error, response, html)=>{
-        if(!error){
+import {WikiLeaf} from "./WikiLeaf";
+let wikiLeafScraper = new WikiLeaf();
+let observable = wikiLeafScraper.scrapeStrainsList();
+let index = 1;
+observable.subscribe((name)=>{
+    index++;
+    setTimeout(()=>{
 
-            //noinspection TypeScriptValidateTypes
-            let loadedHtml = cheerio.load(html);
-            console.log("loaded html of url "+url);
+        let nameForUrl = name.toLowerCase().replace(" ", "-").replace(" ", "-").replace(".", "");
+        console.log(nameForUrl);
+        let promise:Promise<any> = wikiLeafScraper.scrapeSpecificStrain(nameForUrl);
+        promise.then((data)=>{
+            console.log("SLEEP "+data.effects.sleep);
+        });
+        promise.catch((error)=>{
+            console.log(error);
+        })
 
-            // We'll use the unique header class as a starting point.
-            let strainNames = [];
+    }, 2000*index)
 
-            //noinspection TypeScriptValidateTypes
-            loadedHtml('div', '.content-box list-item').each((i,element)=>{
 
-                //noinspection TypeScriptValidateTypes
-                let data = loadedHtml(element);
-                let name = data.attr('data-st-name');
-                //TODO: get other data
-
-                strainNames.push(name);
-
-            });
-        }
-    });
 });
 
-app.listen('8081');
+
+
+

@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "noImplicitAny": false,
         "outDir": "dist",
         "sourceMap": true
     },
     "exclude": [
+        "node_modules/rxjs/Observable.d.ts",
         "node_modules"
     ]
 }
