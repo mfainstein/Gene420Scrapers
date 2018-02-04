@@ -17,9 +17,9 @@ export class TextFiles{
 
     private static writeFileContent(path, content:string){
         let fs:any = require('fs');
-        let mkdirp:any = require('mkdirp');
+        //let mkdirp:any = require('mkdirp');
         //TODO: better with fs
-        mkdirp.sync(path);
+        //mkdirp.sync(path);
         fs.writeFileSync(path, content);
     }
 
@@ -40,5 +40,10 @@ export class TextFiles{
         let fs:any = require('fs');
         let text:string = fs.readFileSync(path, 'utf8');
         return text;
+    }
+
+    public static readJson(path){
+        let text = this.read(path);
+        return JSON.parse(text);
     }
 }

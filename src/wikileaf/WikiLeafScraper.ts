@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 import {ScrapingNetworkUtils} from "../ScrapingNetworkUtils";
 import {StrainScraper} from "../StrainScraper";
+import {TextUtils} from "../TextUtils";
 export class WikiLeafScraper implements StrainScraper{
 
     private strainListUrl:string = "https://www.wikileaf.com/strains/";
@@ -11,15 +12,22 @@ export class WikiLeafScraper implements StrainScraper{
         let loadedHtml = cheerio.load(html);
         console.log("loaded html of url "+url);
 
+
+        let strainNames = [];
         //noinspection TypeScriptValidateTypes
-        loadedHtml('.strain-info-name').each((i,element)=> {
+        let strainInfoNameClass = loadedHtml('.strain-info-name');
+        let listSize = strainInfoNameClass.length;
+        strainInfoNameClass.each((i,element)=> {
 
             //noinspection TypeScriptValidateTypes
             let data = loadedHtml(element);
             let name = data.text();
             //TODO: get other data
-            observer.next(name);
+            //observer.next(name);
+            strainNames.push(name);
         });
+        observer.next(strainNames);
+
     }
 
     handleSpecficStrain(url, html, observer, additionalData){
@@ -31,7 +39,13 @@ export class WikiLeafScraper implements StrainScraper{
 
         //noinspection TypeScriptValidateTypes
         let loadedHtml = cheerio.load(html);
+
         console.log("loaded html of url "+url);
+        let thcRegex = /THC Content\s+-\s+(.+)\s+Highest Test/g;
+        let thcContent = TextUtils.getRegexGroups(html, thcRegex)[0];
+
+        let typeRegex = /<a href=\"https:\/\/www.wikileaf.com\/strains\/(\w+)\/\">(\w+)<\/a>/g;
+        let strainType = TextUtils.getRegexGroups(html, typeRegex)[0];
 
         // We'll use the unique header class as a starting point.
 
@@ -46,29 +60,52 @@ export class WikiLeafScraper implements StrainScraper{
             description = description+descriptionParagraph+"\n";
 
         });
-        //noinspection TypeScriptValidateTypes
-        let data = loadedHtml('#use_relax');
-        let relaxValue = data.attr('value');
 
         //noinspection TypeScriptValidateTypes
-        let data1 = loadedHtml('#use_sleep');
-        let sleepValue = data1.attr('value');
+        let relax = loadedHtml('#use_relax');
+        let relaxValue = relax.attr('value');
 
         //noinspection TypeScriptValidateTypes
-        let data2 = loadedHtml('#use_euphoria');
-        let euphoriaValue = data2.attr('value');
+        let sleep = loadedHtml('#use_sleep');
+        let sleepValue = sleep.attr('value');
 
         //noinspection TypeScriptValidateTypes
-        let data3 = loadedHtml('#use_cott_mouth');
-        let cottonValue = data3.attr('value');
+        let euphoria = loadedHtml('#use_euphoria');
+        let euphoriaValue = euphoria.attr('value');
+
+        //noinspection TypeScriptValidateTypes
+        let cottonMouth = loadedHtml('#use_cott_mouth');
+        let cottonValue = cottonMouth.attr('value');
+
+        //noinspection TypeScriptValidateTypes
+        let paranoia = loadedHtml('#use_paranoia');
+        let paranoiaValue = paranoia.attr('value');
+
+        //noinspection TypeScriptValidateTypes
+        let creativity = loadedHtml('#use_creativity');
+        let creativityValue = creativity.attr('value');
+
+        //noinspection TypeScriptValidateTypes
+        let energy = loadedHtml('#use_energy');
+        let energyValue = energy.attr('value');
+
+        //noinspection TypeScriptValidateTypes
+        let focus = loadedHtml('#use_focus');
+        let focusValue = focus.attr('value');
 
         observer.next({
             "name": additionalData.name,
+            "type": strainType,
+            "thc": thcContent,
             "effects": {
                 "relax":relaxValue,
                 "sleep": sleepValue,
                 "euphoria": euphoriaValue,
-                "cotton-mouth":cottonValue
+                "cotton-mouth":cottonValue,
+                "paranoia": paranoiaValue,
+                "creativity": creativityValue,
+                "energy": energyValue,
+                "focus": focusValue
             },
             "description": description
         });

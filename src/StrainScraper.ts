@@ -1,4 +1,4 @@
 export interface StrainScraper {
-    scrapeStrainsList();
-    scrapeSpecificStrain(urlStrainName:string);
+    scrapeStrainsList(data?);
+    scrapeSpecificStrain(urlStrainName:string, additionalData?:any);
 }

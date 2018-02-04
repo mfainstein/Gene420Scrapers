@@ -1,4 +1,7 @@
+import {StrainScraper} from "./StrainScraper";
 export interface Collector {
-    collect(shouldDump?:boolean);
-    dump();
+    strainScraper:StrainScraper;
+
+    collect(dumpPath?:string);
+    dump(dumpPath?:string);
 }
